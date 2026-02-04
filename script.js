@@ -39,6 +39,19 @@ const dom = {
   /** @type {HTMLButtonElement | null} */
   submitBtn: document.getElementById("submit-btn"),
 
+  // 👇 New Filter Elements
+  /** @type {HTMLInputElement | null} */
+  searchInput: document.getElementById("search-input"),
+
+  /** @type {HTMLSelectElement | null} */
+  filterCategory: document.getElementById("filter-category"),
+  
+  /** @type {HTMLSelectElement | null} */
+  filterDate: document.getElementById("filter-date"),
+
+  // 👇 NEW: Sort Element
+  filterSort: document.getElementById("filter-sort"),
+
   /** @type {HTMLTemplateElement | null} */
   transactionItemTemplate: document.getElementById("transaction-item-template"),
 };
@@ -65,7 +78,7 @@ class Transaction {
    * @param {string} date // New
    * @param {string} category // New
    */
-  constructor(id, description, amount) {
+  constructor(id, description, amount, date, category) {
     if (typeof id !== "number") {
       throw new Error("ID must be a number");
     }
@@ -230,17 +243,46 @@ function renderSummary() {
 }
 
 /**
- * Renders the transactions list UI.
+ * Renders the transactions list UI with Filtering Logic.
  * @returns {void}
  * @remarks Slow operation because it requires to re-render everything.
  */
 function renderTransactions() {
   dom.transactions.innerHTML = "";
 
-  // Sort by newest first (default behavior)
-  const sortedTransactions = [...transactions].reverse();
+  // 1. Get current filter & sort values
+  const searchTerm = dom.searchInput.value.toLowerCase();
+  const filterCat = dom.filterCategory.value;
+  const filterDate = dom.filterDate.value;
+  const sortType = dom.filterSort ? dom.filterSort.value : "date-desc"; //new
 
-  for (const { id, description, amount, date, category } of sortedTransactions) {
+  // 2. Filter the transactions New
+  let processedTransactions = transactions.filter((t) => {
+    const matchesSearch = t.description.toLowerCase().includes(searchTerm);
+    const matchesCategory = filterCat === "All" || t.category === filterCat;
+    const matchesDate = checkDateFilter(t.date, filterDate);
+    return matchesSearch && matchesCategory && matchesDate;
+  });
+
+  // New
+  // 3. Sort the transactions (NEW LOGIC)
+  processedTransactions.sort((a, b) => {
+    if (sortType === "date-desc") {
+      return new Date(b.date) - new Date(a.date); // Newest first
+    } else if (sortType === "date-asc") {
+      return new Date(a.date) - new Date(b.date); // Oldest first
+    } else if (sortType === "amount-desc") {
+      return Math.abs(b.amount) - Math.abs(a.amount); // Highest number first
+    } else if (sortType === "amount-asc") {
+      return Math.abs(a.amount) - Math.abs(b.amount); // Lowest number first
+    } else if (sortType === "name-asc") {
+      return a.description.localeCompare(b.description); // A-Z
+    } else if (sortType === "name-desc") {
+      return b.description.localeCompare(a.description); // Z-A
+    }
+  });
+
+  for (const { id, description, amount, date, category } of processedTransactions) {
     const fragment = dom.transactionItemTemplate.content.cloneNode(true);
 
     const li = fragment.querySelector("li");
@@ -274,11 +316,31 @@ function renderTransactions() {
       deleteTransaction(id);
       persistTransactions();
       renderSummary();
+      renderTransactions(); // Re-render to update list New
       li.remove();
     });
 
     dom.transactions.appendChild(li);
   }
+}
+
+/** New function!
+ * Helper to check if a date is within the selected window (7 days, 30 days)
+ */
+function checkDateFilter(transactionDateStr, filterType) {
+    if (filterType === "All") return true;
+    
+    const today = new Date();
+    today.setHours(23, 59, 59, 999); // End of today
+    
+    const transactionDate = new Date(transactionDateStr);
+    
+    // Calculate the cutoff date (e.g. 7 days ago)
+    const cutoffDate = new Date();
+    cutoffDate.setDate(today.getDate() - Number(filterType));
+    cutoffDate.setHours(0, 0, 0, 0); // Start of that day
+
+    return transactionDate >= cutoffDate && transactionDate <= today;
 }
 
 /** New function!
@@ -309,6 +371,7 @@ function formatToUSD(amount) {
     Event Listeners
 ========================= */
 
+// Form Submit
 dom.transaction.addEventListener("submit", (event) => {
   event.preventDefault();
 
@@ -333,4 +396,26 @@ dom.transaction.addEventListener("submit", (event) => {
   renderSummary();
   renderTransactions();
   resetForm(); // changed from "event.target.reset();"
+});
+
+// 👇 NEW Listeners for Search and Filter
+dom.searchInput.addEventListener("input", () => {
+    renderTransactions();
+});
+
+dom.filterCategory.addEventListener("change", () => {
+    renderTransactions();
+});
+
+dom.filterDate.addEventListener("change", () => {
+    renderTransactions();
+});
+
+dom.filterDate.addEventListener("change", () => {
+   renderTransactions();
+});
+
+// 👇 NEW: Listen for sort changes
+dom.filterSort.addEventListener("change", () => {
+   renderTransactions();
 });
