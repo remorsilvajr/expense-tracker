@@ -39,7 +39,7 @@ const dom = {
   /** @type {HTMLButtonElement | null} */
   submitBtn: document.getElementById("submit-btn"),
 
-  // 👇 New Filter Elements
+  //  New Filter Elements
   /** @type {HTMLInputElement | null} */
   searchInput: document.getElementById("search-input"),
 
@@ -49,7 +49,7 @@ const dom = {
   /** @type {HTMLSelectElement | null} */
   filterDate: document.getElementById("filter-date"),
 
-  // 👇 NEW: Sort Element
+  //  NEW: Sort Element
   filterSort: document.getElementById("filter-sort"),
 
   /** @type {HTMLTemplateElement | null} */
@@ -398,7 +398,7 @@ dom.transaction.addEventListener("submit", (event) => {
   resetForm(); // changed from "event.target.reset();"
 });
 
-// 👇 NEW Listeners for Search and Filter
+// NEW Listeners for Search and Filter
 dom.searchInput.addEventListener("input", () => {
     renderTransactions();
 });
@@ -415,7 +415,8 @@ dom.filterDate.addEventListener("change", () => {
    renderTransactions();
 });
 
-// 👇 NEW: Listen for sort changes
+// NEW: Listen for sort changes
 dom.filterSort.addEventListener("change", () => {
    renderTransactions();
+
 });
