@@ -1,6 +1,11 @@
 /** A key for the local storage transactions entry. */
 const TRANSACTIONS_KEY = "transactions";
 
+const defaultCategories = [
+  "Food", "Salary", "Transport", "Rent", "Utilities", 
+  "Entertainment", "Freelance", "Shopping", "Uncategorized"
+];
+
 const dom = {
   /** @type {HTMLHeadingElement | null} */
   balance: document.getElementById("balance"),
@@ -121,6 +126,7 @@ let transactions = [];
 function initialize() {
   transactions = getTransactions();
   dom.date.valueAsDate = new Date(); // Set default date to today for the add form
+  updateCategoryFilterOptions();
   renderSummary();
   renderTransactions();
 }
@@ -180,7 +186,6 @@ function editTransaction(id) {
   // Change UI to Edit Mode
   dom.submitBtn.textContent = "Update Transaction";
   dom.submitBtn.style.background = "linear-gradient(135deg, #f39c12, #d35400)";
-  window.scrollTo({ top: dom.transaction.offsetTop, behavior: "smooth" });
 }
 
 
@@ -315,6 +320,7 @@ function renderTransactions() {
     button.addEventListener("click", () => {
       deleteTransaction(id);
       persistTransactions();
+      updateCategoryFilterOptions();
       renderSummary();
       renderTransactions(); // Re-render to update list New
       li.remove();
@@ -367,6 +373,40 @@ function formatToUSD(amount) {
   return currencyFormatter.format(amount);
 }
 
+/** * Dynamically updates the filter dropdown options based on 
+ * default categories AND new custom categories found in transactions.
+ */
+function updateCategoryFilterOptions() {
+  const filterDropdown = dom.filterCategory;
+  const currentSelection = filterDropdown.value; // Remember what was selected
+
+  // 1. Get categories from existing transactions
+  const usedCategories = transactions.map(t => t.category);
+
+  // 2. Merge with defaults and remove duplicates
+  let uniqueCategories = [...new Set([...defaultCategories, ...usedCategories])];
+
+  // 3. SORT ALPHABETICALLY (Case-Insensitive)
+  uniqueCategories.sort((a, b) => a.toLowerCase().localeCompare(b.toLowerCase()));
+
+  // 4. Clear the dropdown and add the "All" option back first
+  filterDropdown.innerHTML = '<option value="All">All Categories</option>';
+
+  // 5. Loop through sorted categories and add them to the dropdown
+  uniqueCategories.forEach(category => {
+    const option = document.createElement("option");
+    option.value = category;
+    option.textContent = category;
+    filterDropdown.appendChild(option);
+  });
+
+  // 6. Restore the user's previous selection if it still exists
+  if (uniqueCategories.includes(currentSelection) || currentSelection === "All") {
+    filterDropdown.value = currentSelection;
+  }
+}
+
+
 /* =========================
     Event Listeners
 ========================= */
@@ -393,6 +433,7 @@ dom.transaction.addEventListener("submit", (event) => {
   }
 
   persistTransactions();
+  updateCategoryFilterOptions();
   renderSummary();
   renderTransactions();
   resetForm(); // changed from "event.target.reset();"
