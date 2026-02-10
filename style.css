@@ -341,7 +341,7 @@ h2 {
 
 /* Ensure the form doesn't stretch weirdly */
 .form-container {
-  height: fit-content; 
+  height: fit-content;
 }
 
 label {
@@ -438,7 +438,7 @@ button[type="submit"]:active {
   .main-container {
     display: grid;
     /* Left side takes more space, Right side is fixed width */
-    grid-template-columns: 2fr 1fr; 
+    grid-template-columns: 2fr 1fr;
     gap: 24px;
     align-items: start; /* Keeps the right side from stretching down */
     position: relative;
@@ -448,12 +448,11 @@ button[type="submit"]:active {
 /* Mobile adjustments */
 @media (max-width: 580px) {
   .main-container {
-        /* Fix: Use 1 column for mobile */
-        grid-template-columns: 1fr; 
-    }
-  
+    /* Fix: Use 1 column for mobile */
+    grid-template-columns: 1fr;
+  }
+
   .filter-row {
     flex-direction: column; /* Stack dropdowns on phone */
   }
 }
-
