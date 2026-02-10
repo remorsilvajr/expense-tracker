@@ -262,6 +262,88 @@ h2 {
   margin-bottom: 20px;
 }
 
+/* =========================
+   Filter & Search Styles New
+========================= */
+.filter-container {
+  margin-bottom: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 16px;
+  background-color: #f8fafc;
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
+  height: fit-content;
+  flex-grow: 0;
+}
+
+.search-box {
+  position: relative;
+  width: 100%;
+}
+
+.search-icon {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #a0aec0;
+  pointer-events: none;
+}
+
+#search-input {
+  width: 100%;
+  padding: 10px 10px 10px 36px; /* Space for the icon */
+  border: 1px solid #cbd5e0;
+  border-radius: 8px;
+  font-size: 0.9rem;
+}
+
+.filter-row {
+  display: flex;
+  gap: 10px;
+}
+
+/* Style the dropdowns to match inputs */
+.filter-row select {
+  flex: 1; /* Both take equal width */
+  padding: 8px 12px;
+  border: 1px solid #cbd5e0;
+  border-radius: 8px;
+  background-color: white;
+  color: #2d3748;
+  font-size: 0.85rem;
+  cursor: pointer;
+  outline: none;
+}
+
+.filter-row select:focus {
+  border-color: #059669;
+}
+
+.left-column {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  height: fit-content;
+}
+
+/* --- ADD THIS (Right Side Controls) --- */
+.controls-section {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  /* Optional: Makes the form stick while you scroll the list */
+  position: sticky;
+  top: 20px;
+}
+
+/* Ensure the form doesn't stretch weirdly */
+.form-container {
+  height: fit-content; 
+}
+
 label {
   display: block;
   margin-bottom: 8px;
@@ -363,92 +445,9 @@ button[type="submit"]:active {
   }
 }
 
-/* =========================
-   Filter & Search Styles New
-========================= */
-.filter-container {
-  margin-bottom: 20px;
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  padding: 16px;
-  background-color: #f8fafc;
-  border-radius: 12px;
-  border: 1px solid #e2e8f0;
-  height: fit-content;
-  flex-grow: 0;
-}
-
-.search-box {
-  position: relative;
-  width: 100%;
-}
-
-.search-icon {
-  position: absolute;
-  left: 12px;
-  top: 50%;
-  transform: translateY(-50%);
-  color: #a0aec0;
-  pointer-events: none;
-}
-
-#search-input {
-  width: 100%;
-  padding: 10px 10px 10px 36px; /* Space for the icon */
-  border: 1px solid #cbd5e0;
-  border-radius: 8px;
-  font-size: 0.9rem;
-}
-
-.filter-row {
-  display: flex;
-  gap: 10px;
-}
-
-/* Style the dropdowns to match inputs */
-.filter-row select {
-  flex: 1; /* Both take equal width */
-  padding: 8px 12px;
-  border: 1px solid #cbd5e0;
-  border-radius: 8px;
-  background-color: white;
-  color: #2d3748;
-  font-size: 0.85rem;
-  cursor: pointer;
-  outline: none;
-}
-
-.filter-row select:focus {
-  border-color: #059669;
-}
-
-.left-column {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-  height: fit-content;
-}
-
-/* --- ADD THIS (Right Side Controls) --- */
-.controls-section {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-  /* Optional: Makes the form stick while you scroll the list */
-  position: sticky;
-  top: 20px;
-}
-
-/* Ensure the form doesn't stretch weirdly */
-.form-container {
-  height: fit-content; 
-}
-
 /* Mobile adjustments */
 @media (max-width: 580px) {
   .filter-row {
     flex-direction: column; /* Stack dropdowns on phone */
   }
 }
-
