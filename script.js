@@ -373,26 +373,24 @@ function formatToUSD(amount) {
   return currencyFormatter.format(amount);
 }
 
-/** * Dynamically updates the filter dropdown options based on 
- * default categories AND new custom categories found in transactions.
- */
+
 function updateCategoryFilterOptions() {
   const filterDropdown = dom.filterCategory;
   const currentSelection = filterDropdown.value; // Remember what was selected
 
-  // 1. Get categories from existing transactions
+  // Get categories from existing transactions
   const usedCategories = transactions.map(t => t.category);
 
-  // 2. Merge with defaults and remove duplicates
+  // Merge with defaults and remove duplicates
   let uniqueCategories = [...new Set([...defaultCategories, ...usedCategories])];
 
-  // 3. SORT ALPHABETICALLY (Case-Insensitive)
+  // SORT ALPHABETICALLY (Case-Insensitive)
   uniqueCategories.sort((a, b) => a.toLowerCase().localeCompare(b.toLowerCase()));
 
-  // 4. Clear the dropdown and add the "All" option back first
+  // Clear the dropdown and add the "All" option back first
   filterDropdown.innerHTML = '<option value="All">All Categories</option>';
 
-  // 5. Loop through sorted categories and add them to the dropdown
+  // Loop through sorted categories and add them to the dropdown
   uniqueCategories.forEach(category => {
     const option = document.createElement("option");
     option.value = category;
@@ -400,7 +398,7 @@ function updateCategoryFilterOptions() {
     filterDropdown.appendChild(option);
   });
 
-  // 6. Restore the user's previous selection if it still exists
+  // Restore the user's previous selection if it still exists
   if (uniqueCategories.includes(currentSelection) || currentSelection === "All") {
     filterDropdown.value = currentSelection;
   }
@@ -459,5 +457,4 @@ dom.filterDate.addEventListener("change", () => {
 // NEW: Listen for sort changes
 dom.filterSort.addEventListener("change", () => {
    renderTransactions();
-
 });
