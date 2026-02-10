@@ -447,7 +447,13 @@ button[type="submit"]:active {
 
 /* Mobile adjustments */
 @media (max-width: 580px) {
+  .main-container {
+        /* Fix: Use 1 column for mobile */
+        grid-template-columns: 1fr; 
+    }
+  
   .filter-row {
     flex-direction: column; /* Stack dropdowns on phone */
   }
 }
+
